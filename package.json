@@ -1,0 +1,16 @@
+{
+  "name": "adidas-monitor",
+  "version": "0.0.1",
+  "description": "A node program for monitoring PIDs on adidas.com and outputting to services.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "exit 0"
+  },
+  "author": "cameronb23",
+  "dependencies": {
+    "async": "^2.5.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  }
+}

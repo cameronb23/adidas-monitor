@@ -1,0 +1,21 @@
+{
+  "adidas": {
+    "pids": [
+      "CP9654"
+    ]
+  },
+  "discord": {
+    "enabled": "true",
+    "webhook": {
+      "id": "someid",
+      "token": "your token"
+    }
+  },
+  "slack": {
+    "enabled": "false",
+    "webhook": {
+      "id": "",
+      "token": ""
+    }
+  }
+}
