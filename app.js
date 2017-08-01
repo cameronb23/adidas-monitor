@@ -21,18 +21,14 @@ var sitesMap = {
   }
 };
 
-
 start();
 
 function start() {
-  // TODO: load config
-  // TODO: start async process of scanning all PIDs
-
 
   let intervalPid = setInterval(() => {
     let tasks = [];
 
-    Config.adidas.pids.forEach((pid) => {
+    Config.main.pids.forEach((pid) => {
       Object.keys(sitesMap).forEach((region) => {
         tasks.push(function() {
           getStock(region, pid);
@@ -41,7 +37,7 @@ function start() {
     });
 
     async.parallel(tasks);
-  }, 5000);
+  }, Config.main.interval * 1000);
 }
 
 
@@ -89,38 +85,6 @@ function prepareDiscordEmbed(region, pid, sizes) {
     ]
   }
 
-  /**
-
-  let atc = "";
-
-  let newField = true;
-  let fieldIndex = -1;
-
-  let fields = [];
-
-  for(let i = 0; i < sizes.length; i++) {
-    if(i % 3 === 0) {
-      newField = true;
-    }
-
-    if(newField) {
-      newField = false;
-      let str = fields[fieldIndex].trim();
-      fields[fieldIndex] = str.substr(0, str.length - 1);
-
-      fieldIndex++;
-      fields[fieldIndex] += `Size ${sizes[i].size}: ${sizes[i].stock} | `;
-    } else {
-      fields[fieldIndex] += `Size ${sizes[i].size}: ${sizes[i].stock} | `;
-    }
-  }
-
-  fields.forEach((f) => {
-    format["fields"].push({
-    })
-  })
-  */
-
   let atc = "";
 
   sizes.forEach((size) => {
@@ -130,6 +94,41 @@ function prepareDiscordEmbed(region, pid, sizes) {
     });
   });
 
+
+  return format;
+}
+
+
+function prepareSlackAttachment(region, pid, sizes) {
+  let baseUrl = sitesMap[region].url.split('/on/')[0];
+
+  let link = sitesMap[region].url + STOCK_ENDPOINT + pid;
+
+  let format = {
+    attachments: [
+      {
+        fallback: `Adidas ${region.toUpperCase()} restocked ${pid}`,
+        color: "#36a64f",
+        author_name: `Adidas ${region.toUpperCase()}`,
+        author_link: baseUrl,
+        author_icon: `https://www.google.com/s2/favicons?domain=${baseUrl}`,
+        title: `${pid} Restocked`,
+        title_link: link,
+        fields: [],
+        footer: "Powered by @cgalt23",
+        footer_icon: `https://www.google.com/s2/favicons?domain=${baseUrl}`,
+        ts: new Date().toISOString()
+      }
+    ]
+  };
+
+  sizes.forEach((size) => {
+    format.attachments[0]["fields"].push({
+      title: size.size,
+      value: size.stock,
+      short: true
+    });
+  });
 
   return format;
 }
@@ -245,12 +244,12 @@ function getStock(region, pid) {
 
       if(Config.slack.enabled) {
         // do some shit
+        alertSlackWebhook(prepareSlackAttachment(region, pid, map));
       }
     }
   })
   .catch((err) => {
-    console.log(`[${region}][${pid}] Out of Stock`);
-    console.log(err);
+    console.log(`[${region}][${pid}] Not loaded`);
   });
 
 }
@@ -278,6 +277,25 @@ function alertDiscordWebhook(embed) {
   })
   .catch((err) => {
     console.log("Error sending webhook request to discord.");
+    console.log(err);
+  });
+}
+
+function alertSlackWebhook(payload) {
+  let url = Config.slack.webhook_url;
+
+  let opts = {
+    url: url,
+    method: 'POST',
+    json: payload
+  }
+
+  request(opts)
+  .then((body) => {
+    console.log("Successfully sent incoming webhook to Slack");
+  })
+  .catch((err) => {
+    console.log("Error sending incoming webhook to slack.");
     console.log(err);
   });
 }

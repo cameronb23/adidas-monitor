@@ -1,5 +1,6 @@
 {
-  "adidas": {
+  "main": {
+    "interval": 60,
     "pids": [
       "CP9654"
     ]
@@ -7,15 +8,12 @@
   "discord": {
     "enabled": "true",
     "webhook": {
-      "id": "someid",
-      "token": "your token"
+      "id": "DISCORD_WEBHOOK_ID",
+      "token": "DISCORD_WEBHOOK_TOKEN"
     }
   },
   "slack": {
-    "enabled": "false",
-    "webhook": {
-      "id": "",
-      "token": ""
-    }
+    "enabled": "true",
+    "webhook_url": "SLACK_WEBHOOK_URL"
   }
 }
