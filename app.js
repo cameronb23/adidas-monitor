@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const async = require('async');
+const _ = require('lodash');
 
 const Config = require('./config.json');
 
@@ -170,9 +171,7 @@ function getStock(region, pid) {
       if(sitesMap[region].last[pid] == null) {
         // no old scan so lets just push to our data and stop
         array.forEach((variant) => {
-          if(variant.inStock && variant.avStatus === 'IN_STOCK') {
-            newStock.push(makeCacheVariant(variant));
-          }
+          newStock.push(makeCacheVariant(variant));
         });
 
         sitesMap[region].last[pid] = newStock;
@@ -181,9 +180,7 @@ function getStock(region, pid) {
 
       if(sitesMap[region].last[pid] === 'oos') {
         array.forEach((variant) => {
-          if(variant.inStock && variant.avStatus === 'IN_STOCK') {
-            newStock.push(makeCacheVariant(variant));
-          }
+          newStock.push(makeCacheVariant(variant));
         });
 
         sitesMap[region].last[pid] = newStock;
@@ -193,34 +190,44 @@ function getStock(region, pid) {
 
       let oldVariants = sitesMap[region].last[pid];
 
+      let restocks = [];
+
       array.forEach((variant) => {
         // we have a scan already, lets reference our values.
-
         let isNew = false;
+        let isRestock = false;
 
         let old = oldVariants.filter(v => v.size === variant.attributes.size);
         if(old.length > 0) {
           old = old[0];
+          let newObj = makeCacheVariant(variant);
 
-          if((old.inStock === 'false') && variant.inStock) {
+          if(!_.isEqual(old, newObj)) {
             isNew = true;
-          }
+            if((old.inStock === 'false') && variant.inStock) {
+              isRestock = true;
+            }
 
-          if((old.avStatus !== 'IN_STOCK') && variant.avStatus === 'IN_STOCK') {
-            isNew = true;
+            if((old.avStatus !== 'IN_STOCK') && variant.avStatus === 'IN_STOCK') {
+              isRestock = true;
+            }
           }
         }
 
         if(isNew) {
           console.log("OLD:" + old);
-          console.log("NEW: " + variant);
-          newStock.push(makeCacheVariant(variant));
+          console.log("NEW: " + newObj);
+          newStock.push(newObj);
+        }
+
+        if(isRestock) {
+          restocks.push(newObj);
         }
       });
 
       sitesMap[region].last[pid] = newStock;
 
-      return newStock;
+      return restocks;
     }
   }
 
