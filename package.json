@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A node program for monitoring PIDs on adidas.com and outputting to services.",
   "main": "app.js",
+  "script": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "exit 0"

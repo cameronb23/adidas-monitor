@@ -8,8 +8,8 @@
   "discord": {
     "enabled": "true",
     "webhook": {
-      "id": "341971710075076629",
-      "token": "bqVySeDvQHiFgjo8JpEOlPEXNpiSgpEfnMLfgImT8k9VG4ZkskBXT6il1Rc-OA_JRte4"
+      "id": "enter discord webhook id",
+      "token": "enter webhook token"
     }
   },
   "slack": {
