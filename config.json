@@ -1,6 +1,6 @@
 {
   "main": {
-    "interval": 60,
+    "interval": 5,
     "pids": [
       "CP9654"
     ]
@@ -8,12 +8,12 @@
   "discord": {
     "enabled": "true",
     "webhook": {
-      "id": "DISCORD_WEBHOOK_ID",
-      "token": "DISCORD_WEBHOOK_TOKEN"
+      "id": "341971710075076629",
+      "token": "bqVySeDvQHiFgjo8JpEOlPEXNpiSgpEfnMLfgImT8k9VG4ZkskBXT6il1Rc-OA_JRte4"
     }
   },
   "slack": {
-    "enabled": "true",
+    "enabled": "false",
     "webhook_url": "SLACK_WEBHOOK_URL"
   }
 }

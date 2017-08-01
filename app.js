@@ -154,9 +154,8 @@ function getStock(region, pid) {
       // we will transform the json to suit our needs here.
 
       if(typeof json === 'string') {
-        // product not loaded
+        // product not loaded OR adidas on some fuck shit
         // console.log(`[${region}][${pid}] Product not loaded`);
-        sitesMap[region].last[pid] = 'oos';
         return [];
       }
 
@@ -178,14 +177,15 @@ function getStock(region, pid) {
         return [];
       }
 
-      if(sitesMap[region].last[pid] === 'oos') {
-        array.forEach((variant) => {
-          newStock.push(makeCacheVariant(variant));
-        });
-
-        sitesMap[region].last[pid] = newStock;
-        return newStock;
-      }
+      // if(sitesMap[region].last[pid] === 'oos') {
+      //   console.log('last check we got not loaded');
+      //   array.forEach((variant) => {
+      //     newStock.push(makeCacheVariant(variant));
+      //   });
+      //
+      //   sitesMap[region].last[pid] = newStock;
+      //   return newStock;
+      // }
 
 
       let oldVariants = sitesMap[region].last[pid];
@@ -221,6 +221,8 @@ function getStock(region, pid) {
         }
 
         if(isRestock) {
+          console.log("OLD:" + old);
+          console.log("NEW: " + newObj);
           restocks.push(newObj);
         }
       });
@@ -245,18 +247,18 @@ function getStock(region, pid) {
     });
 
     if(map.length > 0) {
-      if(Config.discord.enabled) {
+      if(Config.discord.enabled === 'true') {
         alertDiscordWebhook(prepareDiscordEmbed(region, pid, map));
       }
 
-      if(Config.slack.enabled) {
+      if(Config.slack.enabled === 'true') {
         // do some shit
         alertSlackWebhook(prepareSlackAttachment(region, pid, map));
       }
     }
   })
   .catch((err) => {
-    console.log(`[${region}][${pid}] Not loaded`);
+    console.log(`[${region}][${pid}] Not loaded, or adidas is messing with us`);
   });
 
 }
