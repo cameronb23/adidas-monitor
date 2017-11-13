@@ -71,7 +71,7 @@ function prepareDiscordEmbed(region, pid, sizes) {
     "color": "518151",
     "timestamp": timeStamp,
     "footer": {
-      "text": "Powered by cameron#9648"
+      "text": "Powered by @cgalt23"
     },
     "author": {
       "name": "Adidas Monitor",
@@ -133,7 +133,6 @@ function prepareSlackAttachment(region, pid, sizes) {
 
   return format;
 }
-
 
 
 function getStock(region, pid) {
